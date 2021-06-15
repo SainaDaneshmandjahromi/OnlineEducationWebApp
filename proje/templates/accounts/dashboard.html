@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title%}
+| Dashboard
+{% endblock %}
+
+{% block content %}
+{% include 'partials/_alerts.html' %}
+<section id="showcase" style="background-image: url({% static 'css/dash.jpg' %});background-size: 1280px 506px;">
+  <div class="container text-center dark-text">
+  </div>
+</section>
+<hr>
+<section id="listings" class="py-5" >
+  <div class="container">
+    <h3 style="border-bottom:2px solid rgb(16, 196, 209) ;padding-bottom:10px;max-width:550px; margin:0 auto 0px;"class="text-center mb-3">YOU ARE CREATOR OF THESE CLASSES</h3>
+    <div class="row">
+      {% if classwithstunumandquiz %}
+      {% for class,numstu,numquiz in classwithstunumandquiz %}
+      <!-- Listing 1 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+            <div class="card-body">
+              <div class="listing-heading text-center">
+                <h4 class="text-primary">{{ class.title }}</h4>
+              </div>
+              <hr>
+
+              <div class="row py-2 text-secondary">
+                <div class="col-6" style="color:rgb(0, 91, 133);font-weight:bolder;">
+                  {{ numstu }} Students</div>
+              </div>
+              <div class="row text-secondary pb-2">
+                <div class="col-6" style="color:rgb(0, 91, 133);font-weight:bolder;">
+                  {{ numquiz }} Quizes </div>
+              </div>
+              <hr>
+              <a href="{% url 'dashclass' class.id %}" class="btn btn-primary btn-block" >Class Details</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      {% else %}
+        <div class="col-md-12" style="text-align:center;">
+          <p> You Have Not Created Any Classes Yet Why You Don't Try It </p>
+        </div>
+      {% endif %}
+
+        
+  </div>
+  <div style="display:relative;margin-bottom: 50px; margin-left:43%;">
+    <button class="btn btn-secondary" style="border: cadetblue; background-color:cadetblue" data-toggle="modal" data-target="#CrClass" >Create new Class</button>
+  </div>
+</section>
+
+<hr/>
+
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 style="border-bottom:2px solid rgb(16, 196, 209);padding-bottom:10px;max-width:550px; margin:0 auto 0px;" class="text-center mb-3">YOU ARE STUDENT OF THESE CLASSES</h3>
+    <div class="row">
+      {% if classwithquiznum %}
+      {% for class,taken,nottaken,creator in classwithquiznum %}
+      <!-- Listing 1 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary" >{{ class.title }}</h4>
+            </div>
+            <hr>
+            <div class="row text-secondary pb-2">
+              <div class="col-6"style="color:black;font-weight:bolder">
+                <i class="fas fa-user"></i> {{creator}} </div>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6" style="color:red;font-weight:bolder">
+                {{taken}} untaken Quizes</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-6" style="color:green;font-weight:bolder">
+                {{nottaken}} taken Quizes </div>
+            </div>
+            <hr>
+            <a href="{% url 'takeQ' class.id %}" class="btn btn-primary btn-block">Answer Untaken Quizes</a>
+            <hr>
+            <a href="{% url 'seeQ' class.id %}" class="btn btn-primary btn-block">See Previous Quizes</a>
+ 
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+        <div class="col-md-12" style="text-align:center;">
+          <p> You Are Not Student Of Any Classes </p>
+        </div>
+      {% endif %}
+  </div>
+</section>
+<hr/>
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 style="border-bottom:2px solid rgb(16, 196, 209);padding-bottom:10px;max-width:550px; margin:0 auto 0px;" class="text-center mb-3">YOU ARE OWNER OF THESE CLASSES</h3>
+    <div class="row">
+      {% if classwithstunumandowner %}
+      {% for class,numstu,numquiz in classwithstunumandowner %}
+      <!-- Listing 1 -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+            <div class="card-body">
+              <div class="listing-heading text-center">
+                <h4 class="text-primary">{{ class.title }}</h4>
+              </div>
+              <hr>
+
+              <div class="row py-2 text-secondary">
+                <div class="col-6" style="color:rgb(0, 91, 133);font-weight:bolder;">
+                  {{ numstu }} Students</div>
+              </div>
+              <div class="row text-secondary pb-2">
+                <div class="col-6" style="color:rgb(0, 91, 133);font-weight:bolder;">
+                  {{ numquiz }} Quizes </div>
+              </div>
+              <hr>
+              <a href="{% url 'dashOwner' class.id %}" class="btn btn-primary btn-block">Class Details</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      {% else %}
+        <div class="col-md-12" style="text-align:center;">
+          <p> You Are Not Owner Of Any Classes </p>
+        </div>
+      {% endif %}
+
+        
+  </div>
+
+</section>
+<div class="modal fade" id="CrClass" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="CrClass">Create Class</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action = "{% url 'createClass' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="property_name" class="col-form-label">Title:</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="property_name" class="col-form-label">Day:</label>
+            <select name="class_day" class="form-control" required>
+              <option selected="true" disabled="disabled">Day</option>
+              <option value="Sat">Saturday</option>
+              <option value="Sun">Sunday</option>
+              <option value="Mon">Monday</option>
+              <option value="Tue">Tuesday</option>
+              <option value="Wed">Wednesday</option>
+              <option value="Thu">Thursday</option>
+              <option value="Fri">Friday</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="email" class="col-form-label">Time :</label>
+            <input name="class_time" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Description :</label>
+            <textarea class="form-control" name = "discription" id="message-text"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">More about:</label>
+            <textarea class="form-control" name = "moreabout" id="message-text"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Password :</label>
+            <input type="password" class="form-control" id="inputPassword40" name="password" placeholder="Make this class Private by setting Password">
+          </div>
+          <hr>
+          <input type="submit" value="Send" class="btn btn-block btn-secondary">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

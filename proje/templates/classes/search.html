@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load humanize %}
+  <!--search-->
+{% block content %}
+{% include 'partials/_alerts.html' %}
+  <section id="showcase" class="home-search">
+    <div class="container text-center searchmarg">
+      <div class="home-search p-5">
+        <div class="overlay p-5" style="background-color: cadetblue;">
+          <h1 class="display-4 mb-4">
+            Search Classes
+          </h1>
+          <div class="search">
+            <form action="{% url 'search' %}" method="GET">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Title</label>
+                  <input type="text" name="title" class="form-control" placeholder="Title" value="{{ values.title }}">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Keywords</label>
+                  <input type="text" name="keywords" class="form-control" value="{{ values.keywords }}" placeholder="Keyword (words in the Description) ">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Creator</label>
+                  <input type="text" name="creator" class="form-control" value="{{ values.creator }}" placeholder="Creator/Owner">
+                </div>
+
+               </div>
+              <!-- <a href="#listings" class="btn btn-secondary btn-block mt-4" type="submit">Submit form</a> -->
+                  <button class="btn btn-secondary btn-block mt-4" type="submit">
+                    Submit form
+                  </button> 
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <hr/>
+
+  <section id="listings" class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-3">Results Classes</h3>
+      <div class="row .flex-container">
+        <!-- Listing 1 -->
+        {% if classwithcreator %}
+          {% for class,creator in classwithcreator %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary" style="border-bottom:2px solid cadetblue;padding-bottom:10px;max-width:550px; margin:0 auto 0px;">
+                      {% if class.isPrivate %}
+                      <i class="fas fa-lock" style="color:rgb(216, 68, 93)"></i> {{ class.title }} </h4>
+                      {% else %}
+                      {{ class.title }} </h4>
+                      {% endif %}
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-user" style="color:rgb(12, 12, 87)"></i> <span style="color: black;">{{ creator }}</span></div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-clock" style="color:rgb(1, 102, 102)"></i> <span style="color: black;"> {{ class.classcreated_date|timesince}}</span></div>
+                  </div>
+                  <!-- {% if stat == "1" %}
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-key" style="color:rgb(255, 0, 98)"></i> <span style="color: black;">Private</span> </div>
+                  </div>
+                  {% else %}
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-key" style="color:rgb(255, 0, 98)"></i> <span style="color: black;">Public</span> </div>
+                  </div> -->
+                  {% endif %}
+                  <hr>
+                  <a href="{% url 'class' class.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+    {% else %}
+
+    <div class="col-md-12">
+      <p> No Classes Available </p>
+    </div>
+
+
+    {% endif %}
+  </section>
+  {% endblock %}
+
+  

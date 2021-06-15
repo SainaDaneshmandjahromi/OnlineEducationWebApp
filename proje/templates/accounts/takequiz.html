@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title%}
+| CreateQuiz
+{% endblock %}
+
+{% block content %}
+<section id="dashboard" class="py-4 screenheight">
+
+    <div class="container">
+        <div class="row">
+        <form action="{% url 'answerq' %}" method="POST">
+            {% csrf_token %}
+            {% if questions %}
+            <div class="form-group">                
+                <h3 class="text-center mb-3" style="color: midnightblue;">Quiz</h3>
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Title </label>
+                <input type="hidden" name="classid" value="{{ classid }}">
+                <input type="text" class="form-control" id="formGroupExampleInput" value="{{ untakenquizes.title }}" disabled>
+            </div>
+            <hr>
+        <input type="hidden" name="quizid" value="{{ untakenquizes.id }}">
+            {% for question,index in questions %}
+            <div class="form-group">
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Question{{ index }}</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" value="{{ question }}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1" style="font-weight: bolder;color:rgb(64, 64, 112)">Answer</label>
+                <textarea class="form-control" name = "Q{{index}}" id="exampleFormControlTextarea1" rows="4"></textarea>
+            </div>
+            {% endfor %}
+            <div style=" margin-left:1000px;float:right;">
+                <button class="btn btn-primary">Submit Answers</button>
+            </div>
+        </form>
+        {% else %}
+        <div class="col-md-12">
+            <p> You Don't have any untaken quizes </p>
+          </div>
+        {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

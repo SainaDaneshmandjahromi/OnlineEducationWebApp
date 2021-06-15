@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title%}
+| CreateQuiz
+{% endblock %}
+
+{% block content %}
+<section id="dashboard" class="py-4 screenheight">
+
+    <div class="container">
+        <div class="row">
+        {% if indexes %}
+        <form action="{% url 'crq' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Title </label>
+                <input type="hidden" name="classid" value= "{{ classes }}">
+                <input type="text" class="form-control" id="formGroupExampleInput" name="title" placeholder="Type Title Of This Quiz">
+              </div>
+            {% for index in indexes %}
+            
+            <div class="form-group">
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Question {{ index }}</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" name="Q{{index}}" placeholder="Type Question">
+              </div>
+              <input type="hidden" name="num" value= "{{ index }}">
+            {% endfor %}
+            <div style=" margin-left:1000px;float:right;">
+                <button class="btn btn-primary">Submit Questions</button>
+            </div>
+        </form>
+        {% else %}
+        <div class="col-md-12">
+            <p> You Have To Chooose a Positive Number </p>
+          </div>
+        {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

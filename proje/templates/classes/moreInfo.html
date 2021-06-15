@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+{% include 'partials/_alerts.html' %}
+<section id="listing" class="py-4 screenheight">
+    <div class="container flex-container" >
+      <div class="col-md-6">
+          <h2 style="text-align:center;">Class details</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" ><span style="font-weight:bolder;color:rgb(46, 192, 192)">Class Title : </span>{{ myclass.title }}</li>
+            <li class="list-group-item" style="background-color: rgb(240, 240, 240);"><span style="font-weight:bolder;color:rgb(44, 196, 196)">Teacher name : </span>{{ myuser.first_name }}</li>
+            <li class="list-group-item"><span style="font-weight:bolder;color:rgb(46, 192, 192)">Class Days :</span>{{ myclass.class_day}}</li>
+            <li class="list-group-item" style="background-color: rgb(240, 240, 240);"><span style="font-weight:bolder;color:rgb(44, 196, 196)">Class Time : </span>{{ myclass.class_time }}</li>
+            <li class="list-group-item" ><span style="font-weight:bolder;color:rgb(46, 192, 192)">Starting date : </span>{{ myclass.classcreated_date }}</li>
+            {% if pv %}
+            <li class="list-group-item" style="background-color: rgb(240, 240, 240);"><span style="font-weight:bolder;color:rgb(44, 196, 196)">Status : </span>This Class is Private</li>
+            {% else %}
+            <li class="list-group-item" style="background-color: rgb(240, 240, 240);"><span style="font-weight:bolder;color:rgb(44, 196, 196)">Status : </span>This Class is Public</li>
+            {% endif %}
+          </ul>
+            {% if user.is_authenticated %} 
+                <button class="btn-primary btn-block btn-lg enroll-btn" data-toggle="modal" data-target="#enrol">Enroll</button>
+            {% else %} 
+                <form  action="{% url 'notenrol' %}">
+                    <button class="btn-primary btn-block btn-lg enroll-btn" >Enroll</button>
+                </form>
+            {% endif %}
+
+      </div>
+      
+        <div class="col-md-6">
+        <!-- Description -->
+        <h2 style="text-align:center;">Description</h2>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" ><span style="font-weight:bolder;color:rgb(33, 187, 187)">Class </span> {{ myclass.description }}</li>
+          <li class="list-group-item" style="background-color: rgb(240, 240, 240);"> <span style="font-weight:bolder;color:rgb(33, 187, 187)">Creator </span>{{ creator.description }}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+    <div class="modal fade" id="enrol" role="dialog">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="inquiryModalLabel">Enroll in Class</h5>
+            <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'enrol' %}"  method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <input type="hidden" name="class_id" value="{{ myclass.id }}">
+                <div class="form-group">
+                <label for="property_name" class="col-form-label">Title:</label>
+                <input type="text" name="listing" class="form-control" value="{{ myclass.title }}" disabled>
+                </div>
+                <div class="form-group">
+                <label for="name" class="col-form-label">Name:</label>
+                <input type="text" name="name" class="form-control" value="{{ user.username }}" required>
+                </div>
+                <div class="form-group">
+                <label for="email" class="col-form-label">Email:</label>
+                <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+                </div>
+                {% if pv %}
+                <div class="form-group">
+                <label for="message-text" class="col-form-label">Password:</label>
+                <input type="password" class="form-control" id="inputPassword40" name="password" placeholder="This Class is Private" required>
+                </div>
+                {% endif %}
+                <hr>
+                <input type="submit" value="Enroll in this Class" class="btn btn-block btn-secondary">
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

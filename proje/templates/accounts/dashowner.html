@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title%}
+| {{class_id}}
+{% endblock %}
+
+{% block content %}
+
+<section id="dashboard" class="py-4 screenheight">
+    <div class="container">
+      {% include 'partials/_alerts.html' %}
+    <div style="display: flex;">
+        {% if owneruser %}
+        {% for owner in owneruser %}
+        <form>
+            <div class="form-row">
+              <div class="col-11">
+                <input type="text" class="form-control" name="owner" value="owner : {{ owner.username }}" disabled>
+              </div>
+            </div>
+        </form>
+        {% endfor %}
+        {% else %}
+        {% for id in class_id %}
+        <form action="{% url  'setowner' %}">
+            <div class="form-row">
+              <div class="col-7">
+                <input type="hidden" name="classid" value = "{{ id }}">
+                <input type="text" class="form-control" name="owner" placeholder="Owner" required>
+              </div>
+              <div class="col">
+                <button class="btn btn-primary" type="submit">Set Owner</button>
+              </div>
+            </div>
+        </form>
+        {% endfor %}
+        {% endif %}
+        
+        {% for id in class_id %}
+        <form action="{% url 'numq' %}">
+            <div class="form-row">
+              <div class="col-7" style="float: left;">
+                <input type="hidden" name="classid" value = "{{ id }}">
+                <input id="number" type="text" class="form-control" name = "numq" placeholder="Number Of Questions" required>
+              </div>
+              <div class="col">
+                <button class="btn btn-primary" style="float:left" >Create Quiz</button>
+              </div>
+            </div>
+        </form>
+        {% endfor %}
+        {% for id in class_id %}
+        <form action="{% url 'convas' %}">
+            <div class="form-row">
+              <div class="col-7">
+                <input type="hidden" name="classid" value = "{{ id }}">
+              </div>
+              <div class="col">
+                <button class="btn btn-primary" type="submit" style="margin-left:470px; background-color:rgb(11, 172, 221); border:rgb(43, 235, 219)" >Enter this Class</button>
+              </div>
+            </div>
+        </form>
+        {% endfor %}
+    </div>
+
+    {% for id in class_id %}
+      <div class="row" style="margin-top: 50px;">
+        <div class="col-md-12">
+          <h1 style="color:midnightblue">STUDENTS LIST</h1>
+            {% if students%}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Students</th>
+                <th scope="col">Quiz</th>
+                <th scope="col">Remove</th>
+              </tr>
+            </thead>
+            
+            {% for student in students %}
+            <tbody>
+              <tr>
+                <td>{{ student.username }}</td>
+                <td>
+                  <form action = "{% url 'seeEachQuizOwner' %}">
+                  <input type="hidden" name="studentid" value="{{ student.id }}">
+                  <input type="hidden" name="classid" value="{{ id }}">
+                  <button class="btn btn-light" type="submit">See this student quizes</button>
+                </form>
+                </td>
+                <td>
+                  <form action = "{% url 'delStd' %}">
+                    <input type="hidden" name="studentid2" value="{{ student.id }}">
+                    <input type="hidden" name="class_id2" value="{{ id }}">
+                    <button class="btn btn-light" type="submit" style="background-color:rgb(216, 68, 93);color:whitesmoke">Remove This Student</button>
+                  </form>
+                </td>
+
+              </tr>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-12">
+                <p> You Do Not Have Any Students Yet </p>
+            </div>
+            {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+      {% for id in class_id %}
+      <div class="row" style="margin-top: 50px;">
+        <div class="col-md-12">
+          <h1 style="color:midnightblue">QUIZ LIST</h1>
+            {% if quizes%}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Quiz</th>
+                <th scope="col">Questions</th>
+              </tr>
+            </thead>
+            
+            {% for quiz in quizes %}
+            <tbody>
+              <tr>
+                <td>{{ quiz.title }}</td>
+                <td>
+                  <form action = "{% url 'seejQ' %}">
+                  <input type="hidden" name="quizid" value="{{ quiz.id }}">
+                  <button class="btn btn-light" type="submit">See questions</button>
+                </form>
+                </td>
+
+              </tr>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-12">
+                <p> There Is Not Any Quizes Yet </p>
+            </div>
+            {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</section>
+
+
+{% endblock %}

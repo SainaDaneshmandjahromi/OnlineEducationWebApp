@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title%}
+| CreateQuiz
+{% endblock %}
+
+{% block content %}
+<section id="dashboard" class="py-4 screenheight">
+
+    <div class="container">
+        <div class="row">
+        <form>
+            {% csrf_token %}
+            {% if questions %}
+            <h3 class="text-center mb-3" style="color: midnightblue;">Quiz</h3>
+            <div class="form-group">
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Title </label>
+                <input type="text" class="form-control" style="color:rgb(1, 2, 54);font-weight:normal;"  id="formGroupExampleInput" value="{{ title }}" disabled>
+            </div>
+            <hr>
+            {% for question,index in questions %}
+            <div class="form-group">
+                <label for="formGroupExampleInput" style="font-weight: bolder;color:rgb(64, 64, 112)">Question{{ index }}</label>
+                <input type="text" style="color:rgb(1, 2, 54);font-weight:normal;" class="form-control" id="formGroupExampleInput" value="{{ question }}" disabled>
+            </div>
+            {% endfor %}
+            <div style=" margin-left:1150px;float:right;">
+            </div>
+        </form>
+        {% else %}
+        <div class="col-md-12">
+            <p> You Don't have any untaken quizes </p>
+          </div>
+        {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
